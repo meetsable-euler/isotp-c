@@ -117,7 +117,7 @@ IsoTpSendHandle isotp_send(IsoTpShims* shims, const uint16_t arbitration_id,
  */
 	bool isotp_send_second_frame(IsoTpShims* shims, uint16_t frame_count, uint8_t num_frames,
         const uint16_t arbitration_id, const uint8_t payload[],
-        const uint8_t size);
+        const uint16_t size);
 
 /* Public: Complete sending multi-frame CAN message. 
  *
@@ -141,7 +141,7 @@ IsoTpSendHandle isotp_send(IsoTpShims* shims, const uint16_t arbitration_id,
  */
 bool isotp_continue_send(IsoTpShims* shims, IsoTpSendHandle* handle,
         const uint16_t arbitration_id, const uint8_t data[],
-        const uint8_t size);
+        const uint16_t size);
 
 #ifdef __cplusplus
 }

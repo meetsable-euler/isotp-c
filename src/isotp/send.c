@@ -114,7 +114,7 @@ IsoTpSendHandle isotp_send(IsoTpShims* shims, const uint16_t arbitration_id,
 
 // send second frames of multi-frame CAN message
 bool isotp_send_second_frame(IsoTpShims* shims, uint16_t frame_count, uint8_t num_frames,
-        const uint16_t arbitration_id, const uint8_t payload[],const uint8_t size) {
+        const uint16_t arbitration_id, const uint8_t payload[],const uint16_t size) {
 	// create the CAN frame array
 	uint8_t can_data[CAN_MESSAGE_BYTE_SIZE] = {0};
 	
@@ -147,14 +147,16 @@ bool isotp_send_second_frame(IsoTpShims* shims, uint16_t frame_count, uint8_t nu
 
 // determine number of second frames and then iterate through them
 bool isotp_continue_send(IsoTpShims* shims, IsoTpSendHandle* handle,
-        const uint16_t arbitration_id, const uint8_t data[],const uint8_t size) {
+        const uint16_t arbitration_id, const uint8_t data[],const uint16_t size) {
 	// mark as complete now to free up diagnostic request handle
 	handle->completed = true;
 	
 	// now compute the num can frames we need to send, given we send 7 bytes a time
-	uint8_t frame_length = 0x7;
-	uint8_t num_can_frames = 1+ size / frame_length;
-	
+	uint16_t frame_length = 7;
+	uint16_t num_can_frames = 1 + (uint16_t)((float)size / (float)frame_length);
+    uint8_t temp_data[8];
+    temp_data[2] = num_can_frames;
+    // shims->send_can_message(0x22,temp_data ,8);
 	// send all the CAN second frames
 	uint16_t count; 
 	for(count = 1; count < num_can_frames; count++){
